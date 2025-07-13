@@ -12,23 +12,16 @@ void printBianary (unsigned char byte) {
 
 int main (int argc, char *argv[]) {
 	int opt;
-	bool isInteger = false;
-	while (opt=getopt(argc,argv,"i")!=-1) {
-		switch (opt) {
-			case 'i':
-				isInteger=true;
-				break;
-			default:
-				perror("Usage: catb [-i] <filename> ...\n");
-				return EXIT_FAILURE;
-		}
+	bool isInteger = false;	
+	int i;
+	for (i=1;i<argc;++i) {
+			
 	}	
 	if (argc<2) {
 		perror("Expected a valid filename or path");
 		return EXIT_FAILURE;
 	}
 	FILE *readee;
-	int i;
 	if (!isInteger) {
 		unsigned char byte;
 		for (i=1;i<argc;++i) {	
