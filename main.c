@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<string.h>
 
 void printBianary (unsigned char byte) {
 	int i;
@@ -12,20 +13,44 @@ void printBianary (unsigned char byte) {
 
 int main (int argc, char *argv[]) {
 	int opt;
-	bool isInteger = false;	
-	int i;
-	for (i=1;i<argc;++i) {
-			
+	char flags[] = {'i'};
+	bool flagstates[] = {false};
+	bool vFlag;
+	bool fArg[argc];
+	fArg[1] = false;
+	for (int i=1;i<argc;++i) {
+		if (argv[i][0]=='-') {
+			fArg[i] = true;
+			for (int s=1;s<strlen(argv[i]);++s) {
+				vFlag = false;
+				for (int a=0;a<sizeof(flags)/sizeof(flags[0]);++a) {
+					if (argv[i][s]==flags[a]) {
+						flagstates[a] = true;
+						vFlag = true;
+					}
+				}
+				if (!vFlag) {
+					perror("Invalid flag");
+					return EXIT_FAILURE;
+				}
+			}
+		}
+		else {
+			fArg[i] = false;
+		}
 	}	
 	if (argc<2) {
 		perror("Expected a valid filename or path");
 		return EXIT_FAILURE;
 	}
 	FILE *readee;
-	if (!isInteger) {
+	if (!flagstates[0]) {
 		unsigned char byte;
-		for (i=1;i<argc;++i) {	
-			readee = fopen(argv[i],"rb");
+		for (int c=1;c<argc;++c) {	
+			if (fArg[c]) {
+				continue;	
+			}
+			readee = fopen(argv[c],"rb");
 			if (readee == NULL) {
 				perror("Unable to open file");
 					return EXIT_FAILURE;
@@ -38,8 +63,11 @@ int main (int argc, char *argv[]) {
 		}
 	}
 	else {
-		for (i=1;i<argc;++i) {
-			readee = fopen(argv[i],"rb");	
+		for (int d=1;d<argc;++d) {
+			if (fArg[d]) {
+				continue;	
+			}
+			readee = fopen(argv[d],"rb");	
 			if (readee == NULL) {
 				perror("Unable to open file");
 				return EXIT_FAILURE;

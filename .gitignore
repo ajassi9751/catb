@@ -1,3 +1,6 @@
+#Ignore the compiled ELF
 catb
+#Ignore an alternate compiled ELF
 main
+#Ignore my test file
 test
