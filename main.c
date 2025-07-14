@@ -17,9 +17,11 @@ int main (int argc, char *argv[]) {
 	bool flagstates[] = {false};
 	bool vFlag;
 	bool fArg[argc];
+	int flgdArgs=0;
 	fArg[1] = false;
 	for (int i=1;i<argc;++i) {
 		if (argv[i][0]=='-') {
+			flgdArgs++;
 			fArg[i] = true;
 			for (int s=1;s<strlen(argv[i]);++s) {
 				vFlag = false;
@@ -30,7 +32,7 @@ int main (int argc, char *argv[]) {
 					}
 				}
 				if (!vFlag) {
-					perror("Invalid flag");
+					printf("Invalid flag");
 					return EXIT_FAILURE;
 				}
 			}
@@ -39,8 +41,8 @@ int main (int argc, char *argv[]) {
 			fArg[i] = false;
 		}
 	}	
-	if (argc<2) {
-		perror("Expected a valid filename or path");
+	if (argc<2+flgdArgs) {
+		printf("Expected a valid filename or path");
 		return EXIT_FAILURE;
 	}
 	FILE *readee;
@@ -52,7 +54,7 @@ int main (int argc, char *argv[]) {
 			}
 			readee = fopen(argv[c],"rb");
 			if (readee == NULL) {
-				perror("Unable to open file");
+				printf("Unable to open file");
 					return EXIT_FAILURE;
 			}
 			while (fread(&byte,sizeof(unsigned char),1,readee) == 1) {
@@ -69,14 +71,14 @@ int main (int argc, char *argv[]) {
 			}
 			readee = fopen(argv[d],"rb");	
 			if (readee == NULL) {
-				perror("Unable to open file");
+				printf("Unable to open file");
 				return EXIT_FAILURE;
 			}	
 			fseek(readee,0,SEEK_END);
 			long size = ftell(readee);
 			int *data = (int *)malloc(size);
 			if (data==NULL) {
-				perror("Memory allocation failed");
+				printf("Memory allocation failed");
 				free(data);
 				fclose(readee);
 				return EXIT_FAILURE;
@@ -85,8 +87,8 @@ int main (int argc, char *argv[]) {
 			size_t datasz = fread(data,sizeof(int),size,readee);
 			if (datasz != size) {
 				if (ferror(readee)) {
-					perror("Error reading file");
-			}
+					printf("Error reading file");
+				}
 				else {
 					printf("Possible file reading error or size conflict");
 				}
